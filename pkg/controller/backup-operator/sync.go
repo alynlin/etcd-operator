@@ -169,10 +169,11 @@ func (b *Backup) removeFinalizerOfPeriodicBackup(eb *api.EtcdBackup) error {
 
 func (b *Backup) periodicRunnerFunc(ctx context.Context, t *time.Ticker, eb *api.EtcdBackup) {
 	defer t.Stop()
+OuterLoop:
 	for {
 		select {
 		case <-ctx.Done():
-			break
+			break OuterLoop
 		case <-t.C:
 			var latestEb *api.EtcdBackup
 			var bs *api.BackupStatus
